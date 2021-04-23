@@ -29,8 +29,8 @@ class minigit
         void checkout();
 
     private:
-        doublyNode dHead;
-        singlyNode sHead;
+        doublyNode* dHead;
+        singlyNode* sHead;
         int userVersion;
         int recentCommit;
 };
