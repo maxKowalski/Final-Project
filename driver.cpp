@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include "miniGit.hpp"
 #include <filesystem>
@@ -8,6 +9,12 @@ namespace fs = std::filesystem;
 using namespace std;
 
 int main(){
-    fs::remove_all(".minigit"); // removes a directory and its contents
-    fs::create_directory(".minigit");  // create a new directory
+    fstream File;
+    minigit system;
+    File.open(".minigit/text.txt");
+    if(File.is_open() == true){
+        cout << "hello" << endl;
+    }
+    system.~minigit();
+
 }

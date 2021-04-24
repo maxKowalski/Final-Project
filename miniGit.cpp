@@ -3,8 +3,10 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
 using namespace std;
+namespace fs = filesystem;
 
 void minigit::addFile(string fileName)
 {
@@ -43,6 +45,41 @@ void minigit::addFile(string fileName)
         }
     }
     return;
+}
+
+minigit::minigit(){
+    fs::create_directory(".minigit");  // create a new directory
+    dEnd = nullptr;
+    dHead = new doublyNode;
+    userVersion = 0;
+    recentCommit = 0;
+}
+
+void deleteSLL(singlyNode*& head){
+    singlyNode* curr = head;
+    singlyNode* prev = nullptr;
+    while(curr != nullptr){
+        prev = curr;
+        curr = curr->next;
+        delete prev;
+    }
+}
+
+minigit::~minigit(){
+    fs::remove_all(".minigit"); // removes a directory and its contents
+    doublyNode* curr = dHead;
+    doublyNode* prev = nullptr;
+    if(curr->head = nullptr){
+        delete curr;
+        return;
+    }
+    while(curr != nullptr){
+        deleteSLL(curr->head);
+        prev = curr;
+        curr = curr->next;
+        delete prev;
+    }
+    
 }
 
 singlyNode* minigit::search(string fileName, doublyNode* commit)
