@@ -1,8 +1,15 @@
 //hello
-#include<vector>
 #include<iostream>
+#include <string>
+
 using namespace std;
 
+struct singlyNode
+{
+    std::string fileName;       // Name of local file
+    std::string fileVersion; // Name of file in .minigit folder
+    singlyNode* next;
+};
 
 struct doublyNode
 {
@@ -11,12 +18,8 @@ struct doublyNode
     doublyNode *previous;
     doublyNode *next;
 }; 
-struct singlyNode
-{
-    std::string fileName;       // Name of local file
-    std::string fileVersion; // Name of file in .minigit folder
-    singlyNode *next;
-};
+
+
 
 class minigit
 {
@@ -30,7 +33,7 @@ class minigit
 
     private:
         doublyNode* dHead;
-        singlyNode* sHead;
+        doublyNode* dEnd;
         int userVersion;
         int recentCommit;
 };
