@@ -1,5 +1,5 @@
 //hello
-#include<iostream>
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -20,13 +20,12 @@ struct doublyNode
 }; 
 
 
-
 class minigit
 {
     public:
         minigit();
         ~minigit();
-        void addFile(string fileName);
+        bool addFile(string fileName);
         void removeFile(string fileName);
         void commit();
         void checkout();

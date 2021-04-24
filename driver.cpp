@@ -11,10 +11,10 @@ using namespace std;
 int main(){
     fstream File;
     minigit system;
-    File.open(".minigit/text.txt");
-    if(File.is_open() == true){
-        cout << "hello" << endl;
-    }
-    system.~minigit();
+    system.addFile("test.txt");
+    system.addFile("snack.txt");
+    system.addFile("nashTown.txt");
+    system.removeFile("test.txt");
+    
 
 }
