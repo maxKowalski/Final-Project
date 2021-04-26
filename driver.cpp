@@ -14,7 +14,6 @@ int main(){
     system.addFile("test.txt");
     system.addFile("snack.txt");
     system.addFile("nashTown.txt");
-    system.removeFile("test.txt");
-    
-
+    //system.removeFile("test.txt");
+    system.commit();
 }

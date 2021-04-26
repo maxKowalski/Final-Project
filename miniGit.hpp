@@ -8,6 +8,7 @@ struct singlyNode
 {
     std::string fileName;       // Name of local file
     std::string fileVersion; // Name of file in .minigit folder
+    string fileType;
     singlyNode* next;
 };
 
@@ -25,10 +26,10 @@ class minigit
     public:
         minigit();
         ~minigit();
-        bool addFile(string fileName);
+        int addFile(string fileName);
         void removeFile(string fileName);
         void commit();
-        void checkout();
+        void checkout(int desiredCommit);
         singlyNode* search(string fileName, doublyNode* commit);
 
     private:

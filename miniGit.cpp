@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+
 #include <sstream>
 #include <filesystem>
 
@@ -11,11 +12,12 @@ namespace fs = filesystem;
 minigit::minigit()
 {
     fs::create_directory(".minigit"); // create a new directory
-    dEnd = nullptr;
+    
     dHead = new doublyNode;
     dHead->head = nullptr;
     userVersion = 0;
     recentCommit = 0;
+    dEnd = dHead;
 }
 
 void deleteSLL(singlyNode *&head)
@@ -32,7 +34,7 @@ void deleteSLL(singlyNode *&head)
 
 minigit::~minigit()
 {
-    fs::remove_all(".minigit"); // removes a directory and its contents
+    //fs::remove_all(".minigit"); // removes a directory and its contents
     doublyNode *curr = dHead;
     doublyNode *prev = nullptr;
     if (curr->head == nullptr)
@@ -49,32 +51,40 @@ minigit::~minigit()
     }
 }
 
-bool minigit::addFile(string fileName)
+int minigit::addFile(string Name)   //0 means not version issues cannot add 1 file exists already 2 means addded
 {
+    if(userVersion != recentCommit){
+        cout << "User version is not up to date with most recent commit. Checkout to most recent commit to add or remove files." << endl;
+        return 0;
+    }
     fstream myFile;
     doublyNode *swag = dEnd;
     if (dEnd == nullptr)
     {
         swag = dHead;
     }
-    myFile.open(fileName);
+    myFile.open(Name);
     //cout << "1" << endl;
     if (myFile.is_open())
     {
         //cout << "2" << endl;
 
-        if (search(fileName, swag) != NULL)
+        if (search(Name, swag) != NULL)
         {
             //cout << "3" << endl;
             cout << "File already exists" << endl;
-            return false;
+            return 0;
         }
         else
         {
             //cout << "4" << endl;
             singlyNode *node = new singlyNode;
-            node->fileName = fileName;
-            node->fileVersion = fileName + "00"; //file verion
+            string temp = Name;
+            temp.erase(temp.end()-4, temp.end());
+            Name.erase(Name.begin(),Name.end()-4);
+            node->fileName = temp;
+            node->fileType = Name;
+            node->fileVersion =  "00"; //file verion
             node->next = nullptr;
             if (swag->head == nullptr)
             {
@@ -97,10 +107,11 @@ bool minigit::addFile(string fileName)
     }
     else
     {
-        return false;
+        cout << "File does not exist please enter a valid name." << endl;
+        return 1;
     }
 
-    return true;
+    return 2;
 }
 
 
@@ -122,8 +133,15 @@ singlyNode *minigit::search(string fileName, doublyNode *commit)
     return nullptr;
 }
 
+
+
 void minigit::removeFile(string fileName)
+
 {
+    if(userVersion != recentCommit){
+        cout << "User version is not up to date with most recent commit. Checkout to most recent commit to add or remove files." << endl;
+        return;
+    }
     doublyNode *commit = dHead; //set commit to head of DLL
     for (int i = 0; i < recentCommit; i++)
     {
@@ -165,4 +183,72 @@ void minigit::removeFile(string fileName)
         }
     }
     return;
+}
+
+void copyFiles(string input, string output){
+
+}
+
+void minigit::commit(){
+    if(userVersion != recentCommit){
+        cout << "User version is not up to date with most recent commit. Checkout to most recent commit to add or remove files." << endl;
+        return;
+    }
+    singlyNode* n = dEnd->head;
+
+    while(n != nullptr){
+        cout << n->fileName << "_" << n->fileVersion << n->fileType<< endl;   
+        n = n->next;
+    }
+
+
+    return;
+    //userVersion++;
+}
+
+
+
+void minigit::checkout(int desiredCommit){
+    string input;
+
+    while(input != "Y" ||input != "N")
+    cout << "You will lose your local changes if you checkout do you wish to continue Y or N" << endl;
+    string input;
+    cin >> input;
+    if(input == "N"){
+        return;
+    }
+    else if(input == "Y"){
+        int n = recentCommit;
+        if(desiredCommit == n){
+            cout <<" Already in desired commit" << endl;
+            return;
+        }
+        else if(desiredCommit >= n || desiredCommit < 0){
+            cout <<"Invaild input!!" << endl;
+            return;
+        }
+        else{
+            doublyNode* crawler;
+            crawler = dEnd;
+            while(crawler->commitNumber != desiredCommit){
+                crawler = crawler->previous;
+            }
+            singlyNode* Scrawler;
+            Scrawler = crawler->head;
+            while(Scrawler->next != NULL){
+                //copy new schtuff over to the directory
+
+                //overwrite the old files 
+                // delete the ne
+
+
+                Scrawler = Scrawler->next; 
+            }
+
+        }
+    }
+    else{
+        cout << "Invalid input" << endl;
+    }
 }
