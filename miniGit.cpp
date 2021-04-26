@@ -197,8 +197,11 @@ void minigit::commit(){
     singlyNode* n = dEnd->head;
 
     while(n != nullptr){
-        cout << n->fileName << "_" << n->fileVersion << n->fileType<< endl;   
-        n = n->next;
+        ifstream outputFile(n->fileName+n->fileVersion+n->fileType);
+        n= n->next;
+        if(outputFile.is_open() == false){
+            fstream outPut("./minigit/" +n->fileName+n->fileVersion+n->fileType);
+        }
     }
 
 
@@ -209,12 +212,13 @@ void minigit::commit(){
 
 
 void minigit::checkout(int desiredCommit){
-    string input;
+    string input = "";
 
-    while(input != "Y" ||input != "N")
-    cout << "You will lose your local changes if you checkout do you wish to continue Y or N" << endl;
-    string input;
-    cin >> input;
+    while(input != "Y" && input != "N"){
+        cout << "You will lose your local changes if you checkout do you wish to continue Y or N" << endl;
+        cin >> input;
+    }
+
     if(input == "N"){
         return;
     }
