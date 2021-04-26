@@ -198,10 +198,12 @@ void minigit::commit(){
 
     while(n != nullptr){
         ifstream outputFile(n->fileName+n->fileVersion+n->fileType);
-        n= n->next;
         if(outputFile.is_open() == false){
+            cout << "./minigit/" +n->fileName+n->fileVersion+n->fileType << endl;
             fstream outPut("./minigit/" +n->fileName+n->fileVersion+n->fileType);
         }
+        n= n->next;
+        
     }
 
 

@@ -17,5 +17,5 @@ int main(){
     system.addFile("nashTown.txt");
     //system.removeFile("test.txt");
     system.commit();
-    system.checkout(1);
+    //system.checkout(1);
 }
