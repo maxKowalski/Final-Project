@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
 #include <sstream>
 #include <filesystem>
 
@@ -34,7 +33,7 @@ void deleteSLL(singlyNode *&head)
 
 minigit::~minigit()
 {
-    //fs::remove_all(".minigit"); // removes a directory and its contents
+    fs::remove_all(".minigit"); // removes a directory and its contents
     doublyNode *curr = dHead;
     doublyNode *prev = nullptr;
     if (curr->head == nullptr)
@@ -60,28 +59,30 @@ int minigit::addFile(string Name) //0 means not version issues cannot add 1 file
     }
     fstream myFile;
     doublyNode *swag = dEnd;
-    if (dEnd == nullptr)
+    if(dEnd == nullptr)
     {
         swag = dHead;
     }
+
     myFile.open(Name);
-    cout << "1" << endl;
+    //cout << "1" << endl;
     if (myFile.is_open())
     {
-        cout << "2" << endl;
-
-        if (search(Name, swag) != NULL)
+        //cout << "2" << endl;
+        string temp = Name;
+        temp.erase(temp.end() - 4, temp.end());
+        if (search(temp, swag) != NULL)
         {
-            cout << "3" << endl;
+            //cout << "3" << endl;
             cout << "File already exists" << endl;
             return 0;
         }
         else
         {
-            cout << "4" << endl;
+            //cout << "4" << endl;
             singlyNode *node = new singlyNode;
-            string temp = Name;
-            temp.erase(temp.end() - 4, temp.end());
+            
+            
             Name.erase(Name.begin(), Name.end() - 4);
             node->fileName = temp;
             node->fileType = Name;
@@ -89,13 +90,13 @@ int minigit::addFile(string Name) //0 means not version issues cannot add 1 file
             node->next = nullptr;
             if (swag->head == nullptr)
             {
-                cout << "5" << endl;
+                //cout << "5" << endl;
                 swag->head = node;
                 
             }
             else
             {
-                cout << "6" << endl;
+                //cout << "6" << endl;
                 singlyNode *pres;
                 pres = swag->head;
                 while (pres->next != nullptr)
@@ -152,13 +153,12 @@ void minigit::removeFile(string fileName)
 
     if (temp == nullptr)
     {
-        cout << "hello" << endl;
-
         return;
     }
     else
     {
-        temp = search(fileName, commit);
+        fileName.erase(fileName.end() - 4, fileName.end());
+        temp = search(fileName,commit);
         if (temp == nullptr)
         {
             cout << "File does not exist." << endl;
@@ -226,13 +226,6 @@ bool compare(string input, string output)
 
 void minigit::commit()
 {
-    cout << dHead->head->fileName << endl;
-    singlyNode* temp = dHead->head;
-    while(temp != nullptr){
-        cout << temp->fileName << endl;
-        temp = temp->next;
-    }
-
     if (userVersion != recentCommit)
     {
         cout << "User version is not up to date with most recent commit. Checkout to most recent commit to add or remove files." << endl;
@@ -248,8 +241,6 @@ void minigit::commit()
         {
             ofstream outPut(name);
             copyFiles(n->fileName + n->fileType, name);
-            int num = stoi(n->fileVersion) + 1;
-            n->fileVersion = to_string(num);
         }
         else
         {
@@ -257,13 +248,20 @@ void minigit::commit()
             { //not the same files
                 //copy file from directory into .minigit
                 //increase version
+                cout << "This is a different file" << endl;
                 int num = stoi(n->fileVersion) + 1;
-                n->fileVersion = to_string(num);
-                ofstream outPut(name);
+                if(num < 10){
+                    n->fileVersion = "0"+ to_string(num);
+                    ofstream outPut(name);
+                }else{
+                    n->fileVersion = to_string(num);
+                    ofstream outPut(name);
+                }
                 copyFiles(n->fileName + n->fileType, name);
             }
             else
             { //same file
+                cout << "This is the same file" << endl;
                 continue;
             }
         }

@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 int main()
 {
     string answer;
@@ -19,9 +20,9 @@ int main()
     }
 
     bool quit = false;
+    minigit system;
     while (!quit)
     {
-        minigit system;
         int option;
         string inputLine;
 
@@ -36,7 +37,7 @@ int main()
 
         if (inputLine.length() != 1 || inputLine[0] < '0' || inputLine[1] > '5')
         {
-            cerr << "Invalid option : " << inputLine << endl;
+            cerr << "Invalid option: " << inputLine << endl;
             continue;
         }
 
