@@ -3,20 +3,30 @@
 #include <vector>
 #include "miniGit.hpp"
 
-
 using namespace std;
-
 
 int main()
 {
     string answer;
+    bool check = false;
 
     cout << "Welcome, would you like to initalize a repository. (Y/N)" << endl;
     getline(cin, answer);
-    if (answer == "N")
+    while (!check)
     {
-        cout << "Goodbye!" << endl;
-        return 0;
+
+        if (answer == "N")
+        {
+            cout << "Goodbye!" << endl;
+            return 0;
+        }
+        else if (answer == "Y" || answer == "y")
+        {
+            check = true;
+        }else{
+            cout << "Not a valid response try again." << endl;
+            getline(cin,answer);
+        }
     }
 
     bool quit = false;
