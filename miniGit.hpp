@@ -29,7 +29,7 @@ class minigit
         int addFile(string fileName);
         void removeFile(string fileName);
         void commit();
-        void checkout(int desiredCommit);
+        void checkout();
         singlyNode* search(string fileName, doublyNode* commit);
 
     private:
