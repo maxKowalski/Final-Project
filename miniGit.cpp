@@ -199,7 +199,7 @@ void copyFiles(string input, string output)
     while (getline(in, line))
     {
         //cout << line << endl;
-        out << line;
+        out << line << endl;
     }
 }
 
@@ -207,61 +207,80 @@ bool compare(string input, string output)
 {
     ifstream out(output);
     ifstream in(input);
-    string line;
-    string line2;
-    while (getline(out, line) && getline(in, line2))
-    {
-        if (line != line2)
-        {
+    //compared the characters size(line)
+    while(true){
+        char one = out.get();
+        char two = in.get();
+        if(one != two){
+            out.close();
+            in.close();
+            return false;
+        }
+        if((out.eof() == true) && (in.eof() == true)){
+            out.close();
+            in.close();
+            return true; 
+        }else if((out.eof() == true) || (in.eof() == true)){
+            out.close();
+            in.close();
             return false;
         }
     }
-    if (line != line2)
-    {
-        return false;
-    }
-
-    return true;
 }
+
 
 void minigit::commit()
 {
-    if (userVersion != recentCommit)
+    if (userVersion != recentCommit)    //checks if the user is in the right commit for checkout
     {
         cout << "User version is not up to date with most recent commit. Checkout to most recent commit to add or remove files." << endl;
         return;
     }
-    singlyNode *n = dEnd->head;
+    singlyNode *n = dEnd->head;     //this is the head of the DL that need to be commited
 
-    while (n != nullptr)
+    while (n != nullptr)    //cycle between all the nodes in the singly list
     {
-        string name = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType;
-        ifstream outputFile(name);
-        if (outputFile.is_open() == false)
+        string name = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType;         //this is the file name of the repository files
+        ifstream outputFile(name);  //tries to read open the file name
+
+        if (outputFile.is_open() == false)      //if it doesnt open 
         {
-            ofstream outPut(name);
-            copyFiles(n->fileName + n->fileType, name);
+            ofstream outPut(name);              //creates new file with file version
+            copyFiles(n->fileName + n->fileType, name);     //copies the old files to the new repository file
         }
-        else
+        else    //if the file does open
         {
-            if (compare(name, n->fileName + n->fileType) == false)
-            { //not the same files
+            cout << name << endl;
+            cout <<  n->fileName + n->fileType << endl;
+            if (compare(name, n->fileName + n->fileType) == false) //compares the two files and if they are not the same 
+            { 
+                //not the same files
                 //copy file from directory into .minigit
                 //increase version
+
+
                 cout << "This is a different file" << endl;
-                int num = stoi(n->fileVersion) + 1;
-                if(num < 10){
+
+                int num = stoi(n->fileVersion) + 1;     //increases the version number
+                
+
+                if(num < 10){   //if the num is less than 10 keep the 0 before the num
                     n->fileVersion = "0"+ to_string(num);
-                    ofstream outPut(name);
-                }else{
+                    string updated = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType;
+                    ofstream outPut(updated);
+                }else{  
                     n->fileVersion = to_string(num);
-                    ofstream outPut(name);
+                    string updated = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType;
+                    ofstream outPut(updated);
                 }
-                copyFiles(n->fileName + n->fileType, name);
+                string updated = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType;
+                //cout << updated << endl;
+                copyFiles(n->fileName + n->fileType, updated); //copies the file from the directory to the new repository file
             }
-            else
-            { //same file
+            else//same file
+            { 
                 cout << "This is the same file" << endl;
+                n= n->next;
                 continue;
             }
         }
