@@ -186,7 +186,15 @@ void minigit::removeFile(string fileName)
 }
 
 void copyFiles(string input, string output){
-
+    cout << input << " " << output << endl;
+    ofstream out(output);
+    ifstream in(input);
+    string line;
+    
+    while(getline(in,line)){
+        //cout << line << endl;
+        out << line;
+    }
 }
 
 void minigit::commit(){
@@ -197,10 +205,11 @@ void minigit::commit(){
     singlyNode* n = dEnd->head;
 
     while(n != nullptr){
-        ifstream outputFile(n->fileName+n->fileVersion+n->fileType);
+        string name = "./.minigit/" +n->fileName+n->fileVersion+n->fileType;
+        ifstream outputFile(name);
         if(outputFile.is_open() == false){
-            cout << "./minigit/" +n->fileName+n->fileVersion+n->fileType << endl;
-            fstream outPut("./minigit/" +n->fileName+n->fileVersion+n->fileType);
+            ofstream outPut(name);
+            copyFiles(n->fileName+n->fileType, name);
         }
         n= n->next;
         
@@ -210,7 +219,6 @@ void minigit::commit(){
     return;
     //userVersion++;
 }
-
 
 
 void minigit::checkout(int desiredCommit){
@@ -225,6 +233,15 @@ void minigit::checkout(int desiredCommit){
         return;
     }
     else if(input == "Y"){
+        singlyNode* deletor;
+        deletor = dEnd->head;
+        while(deletor->next != NULL){
+            string name= deletor->fileName + deletor->fileType;
+            remove(name.c_str()); //removing files might need to make string
+            deletor = deletor->next;
+        }
+
+
         int n = recentCommit;
         if(desiredCommit == n){
             cout <<" Already in desired commit" << endl;
@@ -243,10 +260,6 @@ void minigit::checkout(int desiredCommit){
             singlyNode* Scrawler;
             Scrawler = crawler->head;
             while(Scrawler->next != NULL){
-                //copy new schtuff over to the directory
-
-                //overwrite the old files 
-                // delete the ne
 
 
                 Scrawler = Scrawler->next; 
