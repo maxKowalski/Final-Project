@@ -6,8 +6,8 @@ using namespace std;
 
 struct singlyNode
 {
-    std::string fileName;       // Name of local file
-    std::string fileVersion; // Name of file in .minigit folder
+    string fileName;       // Name of local file
+    string fileVersion; // Name of file in .minigit folder
     string fileType;
     singlyNode* next;
 };
