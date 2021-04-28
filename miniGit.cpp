@@ -211,7 +211,7 @@ bool compare(string input, string output)
     ifstream out(output);
     ifstream in(input);
     //compared the characters size(line)
-    cout << output << " " << input << endl;
+    //cout << output << " " << input << endl;
     while (true)
     {
         char one = out.get();
@@ -219,7 +219,7 @@ bool compare(string input, string output)
         //cout << int(one) << " " << int(two) << endl;
         if (one != two)
         {
-            cout << "hello" << endl;
+            //cout << "hello" << endl;
             out.close();
             in.close();
             return false;
@@ -232,7 +232,7 @@ bool compare(string input, string output)
         }
         else if ((out.eof() == true) || (in.eof() == true))
         {
-            cout << "hello2" << endl;
+            //cout << "hello2" << endl;
             out.close();
             in.close();
             return false;
@@ -261,15 +261,13 @@ void minigit::commit()
         }
         else //if the file does open
         {
-            cout << name << endl;
-            cout << n->fileName + n->fileType << endl;
             if (compare(name, n->fileName + n->fileType) == false) //compares the two files and if they are not the same
             {
                 //not the same files
                 //copy file from directory into .minigit
                 //increase version
 
-                cout << "This is a different file" << endl;
+    
 
                 int num = stoi(n->fileVersion) + 1; //increases the version number
 
@@ -291,7 +289,6 @@ void minigit::commit()
             }
             else //same file
             {
-                cout << "This is the same file" << endl;
                 n = n->next;
                 continue;
             }
@@ -385,31 +382,29 @@ void minigit::checkout()
                     remove(name.c_str()); //removing files might need to make string
                     deletor = deletor->next;
                 }
-                cout << "2" << endl;
+            
                 doublyNode *crawler;
                 crawler = dEnd;
                 while (crawler->commitNumber != stoi(desiredCommit))
                 {
                     crawler = crawler->previous;
                 }
-                cout << "3" << endl;
                 singlyNode *Scrawler;
                 Scrawler = crawler->head;
-                cout << crawler->commitNumber << endl;
-                cout << crawler->head->fileName << endl;
+                
                 while (Scrawler != NULL)
                 {
                     string name = "./.minigit/" + Scrawler->fileName + (Scrawler->fileVersion) + Scrawler->fileType;
                     ifstream outputFile(name);
-                    cout << name << endl;
+                
                     if (outputFile.is_open() == true)
                     {
                         copyFiles(name, Scrawler->fileName + Scrawler->fileType);
-                        cout << "3.5" << endl;
+        
                     }
                     Scrawler = Scrawler->next;
                 }
-                cout << "4" << endl;
+                
                 check = false;
                 userVersion = stoi(desiredCommit);
             }
