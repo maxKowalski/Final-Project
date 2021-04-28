@@ -21,12 +21,11 @@ minigit::minigit()
 
 void deleteSLL(singlyNode *&head)
 {
-    singlyNode *curr = head;
     singlyNode *prev = nullptr;
-    while (curr != nullptr)
+    while (head != nullptr)
     {
-        prev = curr;
-        curr = curr->next;
+        prev = head;
+        head = head->next;
         delete prev;
     }
 }
@@ -59,7 +58,7 @@ int minigit::addFile(string Name) //0 means not version issues cannot add 1 file
     }
     fstream myFile;
     doublyNode *swag = dEnd;
-    if(dEnd == nullptr)
+    if (dEnd == nullptr)
     {
         swag = dHead;
     }
@@ -81,8 +80,7 @@ int minigit::addFile(string Name) //0 means not version issues cannot add 1 file
         {
             //cout << "4" << endl;
             singlyNode *node = new singlyNode;
-            
-            
+
             Name.erase(Name.begin(), Name.end() - 4);
             node->fileName = temp;
             node->fileType = Name;
@@ -92,7 +90,6 @@ int minigit::addFile(string Name) //0 means not version issues cannot add 1 file
             {
                 //cout << "5" << endl;
                 swag->head = node;
-                
             }
             else
             {
@@ -106,7 +103,6 @@ int minigit::addFile(string Name) //0 means not version issues cannot add 1 file
                 pres->next = node;
                 node->next = nullptr;
             }
-            
         }
     }
     else
@@ -158,7 +154,7 @@ void minigit::removeFile(string fileName)
     else
     {
         fileName.erase(fileName.end() - 4, fileName.end());
-        temp = search(fileName,commit);
+        temp = search(fileName, commit);
         if (temp == nullptr)
         {
             cout << "File does not exist." << endl;
@@ -199,7 +195,14 @@ void copyFiles(string input, string output)
     while (getline(in, line))
     {
         //cout << line << endl;
-        out << line << endl;
+        if (in.eof() == true)
+        {
+            out << line;
+        }
+        else
+        {
+            out << line << endl;
+        }
     }
 }
 
@@ -208,19 +211,28 @@ bool compare(string input, string output)
     ifstream out(output);
     ifstream in(input);
     //compared the characters size(line)
-    while(true){
+    cout << output << " " << input << endl;
+    while (true)
+    {
         char one = out.get();
         char two = in.get();
-        if(one != two){
+        //cout << int(one) << " " << int(two) << endl;
+        if (one != two)
+        {
+            cout << "hello" << endl;
             out.close();
             in.close();
             return false;
         }
-        if((out.eof() == true) && (in.eof() == true)){
+        if ((out.eof() == true) && (in.eof() == true))
+        {
             out.close();
             in.close();
-            return true; 
-        }else if((out.eof() == true) || (in.eof() == true)){
+            return true;
+        }
+        else if ((out.eof() == true) || (in.eof() == true))
+        {
+            cout << "hello2" << endl;
             out.close();
             in.close();
             return false;
@@ -228,47 +240,47 @@ bool compare(string input, string output)
     }
 }
 
-
 void minigit::commit()
 {
-    if (userVersion != recentCommit)    //checks if the user is in the right commit for checkout
+    if (userVersion != recentCommit) //checks if the user is in the right commit for checkout
     {
         cout << "User version is not up to date with most recent commit. Checkout to most recent commit to add or remove files." << endl;
         return;
     }
-    singlyNode *n = dEnd->head;     //this is the head of the DL that need to be commited
+    singlyNode *n = dEnd->head; //this is the head of the DL that need to be commited
 
-    while (n != nullptr)    //cycle between all the nodes in the singly list
+    while (n != nullptr) //cycle between all the nodes in the singly list
     {
-        string name = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType;         //this is the file name of the repository files
-        ifstream outputFile(name);  //tries to read open the file name
+        string name = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType; //this is the file name of the repository files
+        ifstream outputFile(name);                                                  //tries to read open the file name
 
-        if (outputFile.is_open() == false)      //if it doesnt open 
+        if (outputFile.is_open() == false) //if it doesnt open
         {
-            ofstream outPut(name);              //creates new file with file version
-            copyFiles(n->fileName + n->fileType, name);     //copies the old files to the new repository file
+            ofstream outPut(name);                      //creates new file with file version
+            copyFiles(n->fileName + n->fileType, name); //copies the old files to the new repository file
         }
-        else    //if the file does open
+        else //if the file does open
         {
             cout << name << endl;
-            cout <<  n->fileName + n->fileType << endl;
-            if (compare(name, n->fileName + n->fileType) == false) //compares the two files and if they are not the same 
-            { 
+            cout << n->fileName + n->fileType << endl;
+            if (compare(name, n->fileName + n->fileType) == false) //compares the two files and if they are not the same
+            {
                 //not the same files
                 //copy file from directory into .minigit
                 //increase version
 
-
                 cout << "This is a different file" << endl;
 
-                int num = stoi(n->fileVersion) + 1;     //increases the version number
-                
+                int num = stoi(n->fileVersion) + 1; //increases the version number
 
-                if(num < 10){   //if the num is less than 10 keep the 0 before the num
-                    n->fileVersion = "0"+ to_string(num);
+                if (num < 10)
+                { //if the num is less than 10 keep the 0 before the num
+                    n->fileVersion = "0" + to_string(num);
                     string updated = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType;
                     ofstream outPut(updated);
-                }else{  
+                }
+                else
+                {
                     n->fileVersion = to_string(num);
                     string updated = "./.minigit/" + n->fileName + (n->fileVersion) + n->fileType;
                     ofstream outPut(updated);
@@ -277,89 +289,151 @@ void minigit::commit()
                 //cout << updated << endl;
                 copyFiles(n->fileName + n->fileType, updated); //copies the file from the directory to the new repository file
             }
-            else//same file
-            { 
+            else //same file
+            {
                 cout << "This is the same file" << endl;
-                n= n->next;
+                n = n->next;
                 continue;
             }
         }
         n = n->next;
     }
     cout << "Sucessfully commited files." << endl;
+    
+    userVersion++;
+    recentCommit++;
+
+    doublyNode *prev = dEnd;
+    doublyNode *newNode = new doublyNode;
+    newNode->next = nullptr;
+    dEnd = newNode;
+    newNode->previous = prev;
+    prev->next = newNode;
+    newNode->commitNumber = prev->commitNumber + 1;
+    singlyNode *sTemp = prev->head;
+    singlyNode *prevSN = nullptr;
+    
+    //cout << prev->commitNumber << " " << newNode->commitNumber << endl;
+
+    while (sTemp != nullptr)
+    {
+
+        singlyNode *newSN = new singlyNode;
+        newSN->fileName = sTemp->fileName;
+        newSN->fileType = sTemp->fileType;
+        newSN->fileVersion = sTemp->fileVersion;
+        if (prev->head == sTemp)
+        {
+            newNode->head = newSN;
+            prevSN = newSN;
+            sTemp = sTemp->next;
+            continue;
+        }
+        prevSN->next = newSN;
+        prevSN = newSN;
+        sTemp = sTemp->next;
+    }
+
     return;
     //userVersion++;
 }
 
 void minigit::checkout()
 {
-    string input = "";
+    string input = ""; // creating a string value with an input
 
-    while (input != "Y" && input != "N")
+    while (input != "Y" && input != "N") //run the question over and over until the user selects either yes or no
     {
-        cout << "You will lose your local changes if you checkout do you wish to continue Y or N" << endl;
-        cin >> input;
+        cout << "You will lose your local changes if you checkout do you wish to continue Y or N" << endl; //question prompt
+        cin >> input;                                                                                      //user input
     }
 
-    if (input == "N")
+    if (input == "N") //finish if the user doesn't want to lose changes
     {
         return;
     }
-    else if (input == "Y")
+    else if (input == "Y") //run checkout
     {
         bool check = true;
         while (check)
         {
-            string desiredCommit;
-            int n = recentCommit;
-            cout << "Ender a commit number you want to checkout too." << endl;
-            getline(cin, desiredCommit);
+            string desiredCommit = "a";
+            int n = userVersion;
+            cout << "Enter the commit number you want to checkout too." << endl;
+            //cout <<  << endl;
+            //getline(cin, desiredCommit);
+            cin >> desiredCommit;
+            cout << desiredCommit << " " << recentCommit << endl;
             if (stoi(desiredCommit) == n)
             {
                 cout << " Already in desired commit" << endl;
                 return;
             }
-            else if (stoi(desiredCommit) >= n || stoi(desiredCommit) < 0)
+            else if (stoi(desiredCommit) > recentCommit || stoi(desiredCommit) < 0)
             {
                 cout << "Invaild input!!" << endl;
                 continue;
             }
             else
             {
+                cout << "1" << endl;
                 singlyNode *deletor;
                 deletor = dEnd->head;
-                while (deletor->next != NULL)
+                while (deletor != NULL)
                 {
                     string name = deletor->fileName + deletor->fileType;
                     remove(name.c_str()); //removing files might need to make string
                     deletor = deletor->next;
                 }
-
+                cout << "2" << endl;
                 doublyNode *crawler;
                 crawler = dEnd;
                 while (crawler->commitNumber != stoi(desiredCommit))
                 {
                     crawler = crawler->previous;
                 }
+                cout << "3" << endl;
                 singlyNode *Scrawler;
                 Scrawler = crawler->head;
-                while (Scrawler->next != NULL)
+                cout << crawler->commitNumber << endl;
+                cout << crawler->head->fileName << endl;
+                while (Scrawler != NULL)
                 {
                     string name = "./.minigit/" + Scrawler->fileName + (Scrawler->fileVersion) + Scrawler->fileType;
                     ifstream outputFile(name);
-                    if (outputFile.is_open() == false)
+                    cout << name << endl;
+                    if (outputFile.is_open() == true)
                     {
-                        ofstream outPut(name);
                         copyFiles(name, Scrawler->fileName + Scrawler->fileType);
+                        cout << "3.5" << endl;
                     }
+                    Scrawler = Scrawler->next;
                 }
-                Scrawler = Scrawler->next;
+                cout << "4" << endl;
                 check = false;
+                userVersion = stoi(desiredCommit);
             }
         }
     }
     else
     {
         cout << "Invalid input" << endl;
+    }
+}
+
+void minigit::print()
+{
+    doublyNode *temp = dHead;
+    for (int i = 0; i < recentCommit; i++)
+    {
+        singlyNode *sTemp = temp->head;
+        cout << "Commit number:" << temp->commitNumber << "-->";
+        while (sTemp != nullptr)
+        {
+            cout << "FN:" << sTemp->fileName << " FV:" << sTemp->fileVersion << " -->";
+            sTemp = sTemp->next;
+        }
+        cout << endl;
+        temp = temp->next;
     }
 }

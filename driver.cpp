@@ -25,7 +25,7 @@ int main()
             check = true;
         }else{
             cout << "Not a valid response try again." << endl;
-            getline(cin,answer);
+            cin >> answer;
         }
     }
 
@@ -35,16 +35,14 @@ int main()
     {
         int option;
         string inputLine;
-
         cout << "======Main Menu======" << endl;
         cout << "1. Add file" << endl;
         cout << "2. Remove file" << endl;
         cout << "3. Commit" << endl;
         cout << "4. Checkout" << endl;
-        cout << "5. Quit" << endl;
-
-        getline(cin, inputLine);
-
+        cout << "5. Print"  << endl;
+        cout << "6. Quit" << endl;
+        cin  >> inputLine;
         if (inputLine.length() != 1 || inputLine[0] < '0' || inputLine[1] > '5')
         {
             cerr << "Invalid option: " << inputLine << endl;
@@ -63,7 +61,7 @@ int main()
             while (check == 1)
             {
                 cout << "Enter a valid file name:" << endl;
-                getline(cin, filename);
+                cin >> filename;
                 //cout << filename;
                 check = system.addFile(filename);
             }
@@ -74,7 +72,7 @@ int main()
             std::string filename;
 
             cout << "Enter a valid file name:" << endl;
-            getline(cin, filename);
+            cin >> filename;
             system.removeFile(filename);
 
             break;
@@ -91,6 +89,11 @@ int main()
         }
         case 5:
         {
+            system.print();
+            break;
+        }
+        case 6:
+        {
             quit = true;
         }
         }
@@ -100,3 +103,5 @@ int main()
 
     return 0;
 }
+
+
